@@ -1,7 +1,5 @@
-// Copyright 2014, Barry Flinn
+// Copyright 2014, Sermo, Inc.
 // Licensed with the MIT license
-// https://bitbucket.org/flinnb/jquery-inview/raw/e6f151762d769a26c5eaf22406271aba5614f0bb/LICENSE
-
 (function ($, window, document, undefined) {
 
   // This is a custom filter, used to find an element which is set up to be
@@ -25,11 +23,12 @@
     }
   });
 
-  function ScrollableContainer(element, rootElement, rootContainer, child) {
+  // This is a helper, to enable us to work with nested containers that are scrollable
+  // in a relatively easy way.
+  function ScrollableContainer(element, rootElement, rootContainer) {
     this.element = element;
     this.rootElement = rootElement || element;
     this.rootContainer = rootContainer || this;
-    this.child = child;
     this.init();
   }
 
@@ -44,45 +43,54 @@
       }
       return this;
     },
-    inView: function () {
+    elementInView: function () {
       var $element = $(this.rootElement);
       var relativeTop = $element.offset().top - $(window).scrollTop();
       var elementHeight = $element.height();
+      var elementBottom = relativeTop + elementHeight;
 
-      if (this.inViewWindow(relativeTop, elementHeight)) {
+      // If the element is not within the viewport of the window, there is
+      // no point in checking the rest of the containers.
+      if (this.elementInViewWindow(relativeTop, elementBottom)) {
+        // If the container is the window, we're done here.
         if (this.$container[0] === window) {
           return true;
         } else {
-          var inViewContainer = this.inViewContainer(relativeTop, elementHeight);
+          var elementInViewContainer = this.elementInViewContainer(relativeTop, elementBottom);
 
           if (this.parent) {
-            return inViewContainer && this.parent.inView();
+            return elementInViewContainer && this.parent.elementInView();
           } else {
-            return inViewContainer;
+            return elementInViewContainer;
           }
         }
       } else {
         return false;
       }
     },
-    inViewWindow: function (relativeTop, elementHeight) {
-      return (relativeTop + elementHeight) <= $(window).height();
+    elementInViewWindow: function (relativeTop, elementBottom) {
+      return elementBottom <= $(window).height() && relativeTop >= 0;
     },
-    inViewContainer: function (relativeTop, elementHeight) {
+    elementInViewContainer: function (relativeTop, elementBottom) {
       var containerTop = this.$container.offset().top - $(window).scrollTop();
       var containerHeight = this.$container.height();
-      return (relativeTop + elementHeight) <= (containerTop + containerHeight);
+      var borderOffset = parseInt(this.$container.css("border-top-width"), 10) + parseInt(this.$container.css("border-bottom-width"), 10);
+      var containerBottom = containerTop + containerHeight + borderOffset;
+      return elementBottom <= containerBottom && relativeTop >= containerTop;
     },
     addScrollListener: function () {
       var self = this;
       this.$container.on("scroll", function () {
-        if (self.rootContainer.inView()) {
-          $(self.rootElement).trigger("inView");
+        if (self.rootContainer.elementInView()) {
+          self.triggerInView();
         }
       });
       if (this.parent) {
         this.parent.addScrollListener();
       }
+    },
+    triggerInView: function () {
+      $(this.rootElement).trigger("inView");
     }
   };
 
@@ -98,7 +106,24 @@
     init: function () {
       var container = new ScrollableContainer(this.element);
       container.addScrollListener();
-      console.debug(container);
+      if (!$.data(document, "scrollableContainers")) {
+        $.data(document, "scrollableContainers", []);
+      }
+      var containers = $.data(document, "scrollableContainers");
+      containers.push(container);
+      $.data(document, "scrollableContainers", containers);
+    }
+  };
+
+  $.elementInView = {};
+
+  $.elementInView.forceCheck = function () {
+    var containers = $.data(document, "scrollableContainers");
+
+    for (var i = 0; i < containers.length; i++) {
+      if (containers[i].elementInView()) {
+        containers[i].triggerInView();
+      }
     }
   };
 
