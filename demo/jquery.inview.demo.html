@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Demo Page</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script>
+    <script type="text/javascript" src="../jquery.inview.js"></script>
+  </head>
+  <body>
+    <!--[if lt IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <section id="demo-block-1" style="overflow: auto; height: 200px; border: solid 1px red;">
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p id='demo-paragraph-1'>I am the last paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+    </section>
+    <section id="demo-label-1"></section>
+
+    <script type="text/javascript">
+    $(function () {
+        $("#demo-paragraph-1").elementInView().on("inView", function () {
+          $("#demo-label-1").text("I am visible!");
+        });
+    });
+    </script>
+
+    <section id="demo-block-2" style="overflow: auto; height: 200px; border: solid 1px red;">
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p id='demo-paragraph-2'>I am the last paragraph...</p>
+    </section>
+    <section id="demo-label-2"></section>
+
+    <script type="text/javascript">
+    $(function () {
+        $("#demo-paragraph-2").elementInView().on("inView", function () {
+          $("#demo-label-2").text("I am visible!");
+        });
+    });
+    </script>
+
+    <section id="demo-block-3a" style="overflow: auto; height: 200px; border: solid 1px red;">
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <p>I am a paragraph...</p>
+      <section id="demo-block-3b" style="overflow: auto; height: 150px; width: 75%; border: solid 1px blue;">
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p id='demo-paragraph-3'>I am the last paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+        <p>I am a paragraph...</p>
+      </section>
+    </section>
+    <section id="demo-label-3"></section>
+
+    <script type="text/javascript">
+    $(function () {
+        $("#demo-paragraph-3").elementInView().on("inView", function () {
+          $("#demo-label-3").text("I am visible!");
+        });
+    });
+    </script>
+  </body>
+</html>
