@@ -118,7 +118,7 @@
   $.elementInView = {};
 
   $.elementInView.forceCheck = function () {
-    var containers = $.data(document, "scrollableContainers");
+    var containers = $.data(document, "scrollableContainers") || [];
 
     for (var i = 0; i < containers.length; i++) {
       if (containers[i].elementInView()) {

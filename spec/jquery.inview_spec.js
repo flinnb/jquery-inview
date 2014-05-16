@@ -102,4 +102,10 @@ describe("ElementInView", function () {
     expect(inView).toBe(true);
     $blockA.remove();
   });
+
+  it("should not error when there are no scrollableContainers available", function () {
+    $.removeData(document, "scrollableContainers");
+    result = $.elementInView.forceCheck();
+    expect(result).toBeUndefined();
+  });
 });
