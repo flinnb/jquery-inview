@@ -74,7 +74,7 @@
     elementInViewContainer: function (relativeTop, elementBottom) {
       var containerTop = this.$container.offset().top - $(window).scrollTop();
       var containerHeight = this.$container.height();
-      var borderOffset = parseInt(this.$container.css("border-top-width"), 10) + parseInt(this.$container.css("border-bottom-width"), 10);
+      var borderOffset = this.$container.outerHeight() - this.$container.height();
       var containerBottom = containerTop + containerHeight + borderOffset;
       return elementBottom <= containerBottom && relativeTop >= containerTop;
     },

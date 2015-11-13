@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <meta http-equiv="x-ua-compatible" content="IE=Edge"/>
     <meta charset="utf-8">
     <title>Demo Page</title>
     <meta name="description" content="">
@@ -8,62 +9,265 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script>
     <script type="text/javascript" src="../jquery.inview.js"></script>
+
+    <style type="text/css">
+    body {
+      font-family: sans-serif;
+    }
+    pre, code {
+      color: navy;
+    }
+    pre {
+      overflow-x: auto;
+    }
+    article {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    #sidebar {
+      position: fixed;
+    }
+    [class*='colspan-'] {
+      float: left;
+    }
+    .colspan-1 {
+      width: 25%;
+    }
+    .colspan-2 {
+      width: 50%;
+    }
+    .colspan-3 {
+      width: 75%;
+    }
+    .grid:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    *, *:after, *:before {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    [class*='colspan-'] {
+      padding-right: 20px;
+    }
+    [class*='colspan-']:last-of-type {
+      padding-right: 0;
+    }
+    #demo-paragraph-4 {
+      background-color: #efefef;
+    }
+    </style>
   </head>
   <body>
     <!--[if lt IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <section id="demo-block-1" style="overflow: auto; height: 200px; border: solid 1px black;">
-      <p id="demo-paragraph-1" style="position: relative; top: 300px; height: 20px;">I am the test paragraph...</p>
-    </section>
-    <section id="demo-label-1"></section>
+    <h1>jquery.inview Plugin Demo</h1>
+    <section class="grid">
+      <section class="colspan-3" id="main">
+        <article id="demo-1">
+          <h2>Simple Demo</h2>
 
-    <script type="text/javascript">
-    $(function () {
-        $("#demo-paragraph-1").elementInView().on("inView", function () {
-          $("#demo-label-1").text("I am visible!");
-        });
-    });
-    </script>
+          <p>This is the simplest form of usage for this plugin.  For the html:</p>
 
-    <section id="demo-block-2" style="overflow: auto; height: 150px; border: solid 1px black;">
-      <p id="demo-paragraph-2">I am the test paragraph...</p>
-    </section>
-    <section id="demo-label-2"></section>
+          <pre>
+            &lt;section id="demo-block-1" style="overflow: auto; height: 200px; border: solid 1px black;"&gt;
+              &lt;p id="demo-paragraph-1" style="position: relative; top: 300px; height: 20px;"&gt;I am the test paragraph...&lt;/p&gt;
+            &lt;/section&gt;
+            &lt;section id="demo-label-1"&gt;&lt;code&gt;#demo-paragraph-1&lt;/code&gt; is out of view.&lt;/section&gt;
+          </pre>
 
-    <script type="text/javascript">
-    $(function () {
-        $("#demo-paragraph-2").elementInView().on("inView", function () {
-          $("#demo-label-2").text("I am visible!");
-        });
-    });
-    </script>
+          <p>you can apply the javascript:</p>
 
-    <section id="demo-block-3a" style="overflow: auto; height: 200px; border: solid 1px black;">
-      <section id="demo-block-3b" style="overflow: auto; height: 150px; width: 75%; border: solid 1px grey; position: relative; top: 100px;">
-        <p id="demo-paragraph-3" style="position: relative; top: 300px; height: 20px;">I am the test paragraph...</p>
+          <pre>
+          $(function () {
+            $("#demo-paragraph-1").elementInView().on("inView", function () {
+              $("#demo-label-1").text("<code>#" + this.id + "</code> is now visible!");
+            });
+          });
+          </pre>
+
+          <p>This will listen for the <code>scroll</code> event on the section <code>#demo-block-1</code>,
+             and when the paragraph <code>#demo-paragraph-1</code> is visible, the <code>inView</code>
+             event will be triggered.  In this instance, the <code>inView</code> event will cause the
+             section <code>#demo-label-1</code> to be updated with a notice saying that
+             <code>#demo-paragraph-1</code> is now visible.</p>
+
+           <p>This demonstrates the ability to detect when the target element is within a scrollable
+              container, and detects when the target is viewable within that container.</p>
+
+
+          <section id="demo-block-1" style="overflow: auto; height: 200px; border: solid 1px black;">
+            <p id="demo-paragraph-1" style="position: relative; top: 300px; height: 20px;">I am the test paragraph...</p>
+          </section>
+
+          <script type="text/javascript">
+          $(function () {
+            $("#demo-paragraph-1").elementInView().on("inView", function () {
+              $("#demo-label-1").html("<code>#" + this.id + "<\/code> is now visible!");
+            });
+          });
+          </script>
+        </article>
+
+        <h2>Un-scrollable Container Demo</h2>
+
+        <article>
+          <p>This demo shows that if the target element is within a scrollable container, but the content
+             of the container is not tall enough to cause scrolling, it will default to checking the scroll
+             of the window instead.</p>
+
+          <p>For the HTML:</p>
+
+          <pre>
+            &lt;section id="demo-block-2" style="overflow: auto; height: 150px; border: solid 1px black;"&gt;
+              &lt;p id="demo-paragraph-2"&gt;I am the test paragraph...&lt;/p&gt;
+            &lt;/section&gt;
+            &lt;section id="demo-label-2"&gt;&lt;code&gt;#demo-paragraph-1&lt;/code&gt; is out of view.&lt;/section&gt;
+          </pre>
+
+          <p>you can apply the javascript:</p>
+
+          <pre>
+          $(function () {
+              $("#demo-paragraph-2").elementInView().on("inView", function () {
+                $("#demo-label-2").html("&lt;code&gt;#" + this.id + "&lt;/code&gt; is now visible!");
+              });
+          });
+          </pre>
+
+          <p>This will listen for the <code>scroll</code> event on the <code>window</code>,
+             and when the paragraph <code>#demo-paragraph-2</code> is visible, the <code>inView</code>
+             event will be triggered.  In this instance, the <code>inView</code> event will cause the
+             section <code>#demo-label-2</code> to be updated with a notice saying that
+             <code>#demo-paragraph-2</code> is now visible.</p>
+
+          <section id="demo-block-2" style="overflow: auto; height: 150px; border: solid 1px black;">
+            <p id="demo-paragraph-2">I am the test paragraph...</p>
+          </section>
+
+          <script type="text/javascript">
+          $(function () {
+              $("#demo-paragraph-2").elementInView().on("inView", function () {
+                $("#demo-label-2").html("<code>#" + this.id + "<\/code> is now visible!");
+              });
+          });
+          </script>
+        </article>
+
+        <h2>Nested Scrollable Containers Demo</h2>
+
+        <article>
+          <p>This demo shows the ability to detect if the target element is visible, even within
+             arbitrarily nested containers.  No matter how many scrollable containers the target
+             is nested in, the plugin will still detect when the target is visible to the end
+             user.</p>
+
+          <p>For the HTML:</p>
+
+          <pre>
+            &lt;section id="demo-block-3a" style="overflow: auto; height: 200px; border: solid thick black;"&gt;
+              &lt;section id="demo-block-3b" style="overflow: auto; height: 150px; width: 75%; border: solid 1px grey; position: relative; top: 100px;"&gt;
+                &lt;p id="demo-paragraph-3" style="position: relative; top: 300px; height: 20px;"&gt;I am the test paragraph...&lt;/p&gt;
+              &lt;/section&gt;
+            &lt;/section&gt;
+          </pre>
+
+          <p>you can apply the javascript:</p>
+
+          <pre>
+            $(function () {
+                $("#demo-paragraph-3").elementInView().on("inView", function () {
+                  $("#demo-label-3").html("&lt;code&gt;#" + this.id + "&lt;\/code&gt; is now visible!");
+                });
+            });
+          </pre>
+
+          <p>This will listen for the <code>scroll</code> event on the section <code>#demo-block-3a</code>
+             and the section <code>#demo-block-3b</code>, and when the paragraph
+             <code>#demo-paragraph-1</code> is visible within both sections, the <code>inView</code>
+             event will be triggered.  In this instance, the <code>inView</code> event will cause the
+             section <code>#demo-label-3</code> to be updated with a notice saying that
+             <code>#demo-paragraph-3</code> is now visible.</p>
+
+           <p>This demo only shows 2 nested containers, but it should also work for an arbitrary number
+              of nested containers, since it will walk up the DOM until there are no longer any scrollable
+              containers.</p>
+
+          <article>
+            <section id="demo-block-3a" style="overflow: auto; height: 200px; border: solid thick black;">
+              <section id="demo-block-3b" style="overflow: auto; height: 150px; width: 75%; border: solid 1px grey; position: relative; top: 100px;">
+                <p id="demo-paragraph-3" style="position: relative; top: 300px; height: 20px;">I am the test paragraph...</p>
+              </section>
+            </section>
+
+            <script type="text/javascript">
+            $(function () {
+                $("#demo-paragraph-3").elementInView().on("inView", function () {
+                  $("#demo-label-3").html("<code>#" + this.id + "<\/code> is now visible!");
+                });
+            });
+            </script>
+          </article>
+        </article>
+
+        <h2>Target Item in Document</h2>
+
+        <article>
+          <p>This is to demonstrate that even an item that is not in a scrollable container, it
+            can still be detected, since the plugin will default to using the <code>window</code>
+            to see if the target item is visible.</p>
+
+          <p>For the HTML:</p>
+
+          <pre>
+            &lt;p id="demo-paragraph-4"&gt;I am the test paragraph...&lt;/p&gt;
+          </pre>
+
+          <p>you can apply the javascript:</p>
+
+          <pre>
+            $(function () {
+                $("#demo-paragraph-4").elementInView().on("inView", function () {
+                  $("#demo-label-4").html("&lt;code&gt;#" + this.id + "&lt;\/code&gt; is now visible!");
+                });
+            });
+          </pre>
+
+          <p>This will listen for the <code>scroll</code> event on the <code>window</code>,
+             and when the paragraph <code>#demo-paragraph-4</code> is visible, the <code>inView</code>
+             event will be triggered.  In this instance, the <code>inView</code> event will cause the
+             section <code>#demo-label-4</code> to be updated with a notice saying that
+             <code>#demo-paragraph-4</code> is now visible.</p>
+
+          <article>
+            <p id="demo-paragraph-4">I am the test paragraph...</p>
+
+            <script type="text/javascript">
+            $(function () {
+                $("#demo-paragraph-4").elementInView().on("inView", function () {
+                  $("#demo-label-4").html("<code>#" + this.id + "<\/code> is now visible!");
+                });
+            });
+            </script>
+          </article>
+        </article>
+      </section>
+
+      <section class="colspan-1">
+        <aside id="sidebar">
+          <h3>Paragraph Status</h3>
+          <ul>
+            <li id="demo-label-1"><code>#demo-paragraph-1</code> is out of view.</li>
+            <li id="demo-label-2"><code>#demo-paragraph-2</code> is out of view.</li>
+            <li id="demo-label-3"><code>#demo-paragraph-3</code> is out of view.</li>
+            <li id="demo-label-4"><code>#demo-paragraph-4</code> is out of view.</li>
+          </ul>
+        </aside>
       </section>
     </section>
-    <section id="demo-label-3"></section>
-
-    <script type="text/javascript">
-    $(function () {
-        $("#demo-paragraph-3").elementInView().on("inView", function () {
-          $("#demo-label-3").text("I am visible!");
-        });
-    });
-    </script>
-
-    <p id="demo-paragraph-4">I am the test paragraph...</p>
-    <section id="demo-label-4"></section>
-
-    <script type="text/javascript">
-    $(function () {
-        $("#demo-paragraph-4").elementInView().on("inView", function () {
-          $("#demo-label-4").text("I am visible!");
-        });
-    });
-    </script>
 
     <script type="text/javascript">
     $(function () {

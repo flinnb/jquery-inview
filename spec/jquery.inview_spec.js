@@ -34,6 +34,33 @@ describe("ElementInView", function () {
     $container.remove();
   });
 
+  it("should trigger 'inView' event when element is scrolled into view in container with non-standard border width", function () {
+    $("body").append(
+      "<section id='block' style='overflow: auto; height: 200px; border: solid thick red;'>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p id='paragraph'>I am the test paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "  <p>I am a paragraph...</p>" +
+      "</section>"
+    );
+    var inView = false;
+    var $element = $("#paragraph");
+    $element.elementInView().on("inView", function () {
+      inView = true;
+    });
+    var $container = $("#block");
+    $container.scrollTop(100);
+    $container.scroll();
+    expect(inView).toBe(true);
+    $container.remove();
+  });
+
   it("should trigger 'inView' event when element is scrolled into view in window", function () {
     $("body").append("<p id='paragraph'>I am a test paragraph...</p>");
     var inView = false;
