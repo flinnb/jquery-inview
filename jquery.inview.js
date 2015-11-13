@@ -1,4 +1,4 @@
-// Copyright 2014, Sermo, Inc.
+// Copyright 2014-2015, SERMO, Inc.
 // Licensed with the MIT license
 (function ($, window, document, undefined) {
 
